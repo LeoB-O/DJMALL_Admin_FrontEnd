@@ -60,15 +60,15 @@ const permission = {
       // state.routers.forEach(function(e){
       //     if(e.name==="首页"){
       //     state.siderbar_routers=e;
-            
+
       //     }
 
       // })
 
     },
      SET_NOW_ROUTERS: (state, to) => {
-       
-          
+
+
           // 递归访问 accessedRouters，找到包含to 的那个路由对象，设置给siderbar_routers
           console.log(state.addRouters)
         state.addRouters.forEach(e => {
@@ -76,9 +76,9 @@ const permission = {
            if( getNowRouter(e.children,to)===true)
                   state.siderbar_routers=e;
           }
-      
+
         })
-      
+
 
      }
 
@@ -87,6 +87,7 @@ const permission = {
     GenerateRoutes({ commit }, data) {
       return new Promise(resolve => {
         const { roles } = data
+          console.log(data);
         let accessedRouters
         if (roles.indexOf('admin') >= 0) {
           accessedRouters = asyncRouterMap
@@ -99,7 +100,7 @@ const permission = {
         resolve();
       })
     },
- 
+
   getNowRoutes({ commit }, data) {
       return new Promise(resolve => {
         //data => to

@@ -30,14 +30,14 @@
       name: 'login',
       data() {
         const validateEmail = (rule, value, callback) => {
-          if (!isWscnEmail(value)) {
+          if (false) {
             callback(new Error('请输入正确的合法邮箱'));
           } else {
             callback();
           }
         };
         const validatePass = (rule, value, callback) => {
-          if (value.length < 6) {
+          if (value.length < 0) {
             callback(new Error('密码不能小于6位'));
           } else {
             callback();
@@ -62,7 +62,7 @@
       },
        mounted () {
         container = document.createElement( 'div' );
-   this.$refs.can.appendChild( container );  
+   this.$refs.can.appendChild( container );
 
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
   camera.position.z = 1000;
@@ -118,7 +118,7 @@ animate();
               this.loading = true;
               this.$store.dispatch('LoginByEmail', this.loginForm).then(() => {
                 this.$Message.success('登录成功');
-                
+
                 this.loading = false;
                 this.$router.push({ path: '/' });
               }).catch(err => {
@@ -151,7 +151,7 @@ var windowHalfY = window.innerHeight / 2;
 
 function init() {
 
-  
+
 
 }
 
@@ -259,7 +259,7 @@ function render() {
       font-size: 14px;
       color: #fff;
       margin-bottom: 5px;
-    } 
+    }
     .login-container {
         height: 100vh;
         background-color: #2d3a4b;
