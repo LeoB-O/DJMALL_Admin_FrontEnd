@@ -159,6 +159,8 @@
                 this.subCategoryIndex = -1;
                 this.editIndex = -1;
                 axios.post('/api/good', this.data[index]);
+                console.log(this.data[index]);
+                this.$router.go(0)
             }
         },
         created() {
