@@ -10,34 +10,26 @@
             <Col :md="24">
                 <Table :columns="columns" :data="data">
                     <template slot-scope="{ row, index }" slot="name">
-                        <Input type="text" v-model="editName" v-if="editIndex === index"/>
-                        <span v-else>{{ row.name }}</span>
+                        <span>{{ row.name }}</span>
                     </template>
 
                     <template slot-scope="{ row, index }" slot="start">
-                        <Input type="text" v-model="editName" v-if="editIndex === index"/>
-                        <span v-else>{{ row.startTime }}</span>
+                        <span>{{ row.startTime }}</span>
                     </template>
 
                     <template slot-scope="{ row, index }" slot="update">
-                        <Input type="text" v-model="editName" v-if="editIndex === index"/>
-                        <span v-else>{{ row.updateTime }}</span>
+                        <span>{{ row.updateTime }}</span>
                     </template>
 
                     <template slot-scope="{ row, index }" slot="content">
-                        <Input type="text" v-model="editName" v-if="editIndex === index"/>
-                        <span v-else>{{ row.content }}</span>
+                        <span>{{ row.content }}</span>
                     </template>
 
                     <template slot-scope="{ row, index }" slot="action">
-                        <div v-if="editIndex === index">
-                            <Button @click="handleSave(index)">保存</Button>
-                            <Button @click="editIndex = -1">取消</Button>
-                        </div>
-                        <div v-else>
+                        <div>
                             <Button @click="handleChat(row ,index)">聊天</Button>
                         </div>
-                        <ChatRoom :modal="row.modal" :Id="row.id"></ChatRoom>
+                        <ChatRoom @cancel="handleCancel(row)" :modal="row.modal" :Id="row.id"></ChatRoom>
                     </template>
                 </Table>
             </Col>
@@ -113,11 +105,16 @@
             }
         },
         methods: {
+            handleCancel: function (row) {
+                this.data[row._index].modal = false
+                console.log('wtdfdddd')
+            },
             handleChat: function (row, index) {
                 this.$Notice.open({
                     title: 'chating',
                     desc: 'Chating'
                 })
+                this.data[row._index].modal = true
                 row.modal = true
             }
         }

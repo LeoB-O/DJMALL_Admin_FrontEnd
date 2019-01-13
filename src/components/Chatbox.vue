@@ -31,7 +31,7 @@ span {
 }
 .box {
   border-radius: 10px;
-  background: rgb(184, 132, 214);
+  /*background: rgb(184, 132, 214);*/
   width: 30%;
   height: auto;
   min-height: 100px;
