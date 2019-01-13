@@ -19,7 +19,7 @@
                             <Input type="text" v-model="editCategory" v-if="editIndex === index"/>
                             <Input type="text" v-model="editSubCategory" v-if="editIndex === index"/>
                         </div>
-                        <span v-else>{{ row.category.cate }} - {{row.category.subCate}}</span>
+                        <span v-else>{{ row.category.parentCate }} - {{row.category.subCate}}</span>
                     </template>
 
                     <template slot-scope="{ row, index }" slot="price">
@@ -30,15 +30,15 @@
                     <template slot-scope="{ row, index }" slot="options">
                         <div v-if="editIndex === index">
                             <div style="display: flex;" v-for="option in row.options">
-                                <Input v-model="option.attrName"></Input>
-                                <Input :key="sub.index" v-model="sub.value" v-for="sub in option.attrValues">{{sub}},</Input>
+                                <Input v-model="option.name"></Input>
+                                <Input :key="sub.index" v-model="sub.value" v-for="sub in option.values">{{sub}},</Input>
                             </div>
                         </div>
 
                         <span v-else>
                             <div v-for="option in row.options">
-                                <span>{{option.attrName}}:</span>
-                                <span :key="sub.index" v-for="sub in option.attrValues">{{sub.value}},</span>
+                                <span>{{option.name}}:</span>
+                                <span :key="sub.index" v-for="sub in option.values">{{sub.value}},</span>
                             </div>
                         </span>
                     </template>
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+    import axios from '@/axios'
     export default {
         name: "Goods",
         data() {
@@ -132,7 +133,7 @@
             handleEdit(row, index) {
                 this.editName = row.name;
                 this.editPrice = row.price;
-                this.editCategory = row.category.cate;
+                this.editCategory = row.category.parentCate;
                 this.editSubCategory = row.category.subCate;
                 this.editOptions = row.options;
                 this.editIndex = index;
@@ -142,18 +143,47 @@
             },
             handleSave(index) {
                 this.data[index].name = this.editName;
-                this.data[index].age = this.editAge;
-                this.data[index].birthday = this.editBirthday;
-                this.data[index].address = this.editAddress;
-                if (this.categoryIndex != -1 && this.subCategoryIndex == -1) {
-                    this.data[index].category[this.categoryIndex].title = this.category;
-                } else if (this.categoryIndex != -1) {
-                    this.data[index].category[this.categoryIndex].children[this.subCategoryIndex].title = this.subCategory;
-                }
+                this.data[index].price = this.editPrice;
+                this.data[index].options = this.editOptions.map((current) => {
+                    return {
+                        name: current.name,
+                        values: current.values.map((value) => {
+                            return value.value
+                        })
+                    }
+                });
+                console.log(this.data[index].options)
+                this.data[index].category.parentCate = this.editCategory;
+                this.data[index].category.subCate = this.editSubCategory;
                 this.categoryIndex = -1;
                 this.subCategoryIndex = -1;
                 this.editIndex = -1;
+                axios.post('/api/good', this.data[index]);
             }
+        },
+        created() {
+            axios.get('/goods').then((response) => {
+                this.data = response.data.goods.map((current) => {
+                    return {
+                        id: current.id,
+                        name: current.name,
+                        price: current.price,
+                        category: current.category,
+                        options: current.options.map((option) => {
+                            return {
+                                name: option.name,
+                                values: option.values.map((value, index) => {
+                                    return {
+                                        index: index,
+                                        value: value
+                                    }
+                                })
+                            }
+                        })
+                    }
+                });
+                console.log(this.data);
+            });
         }
     }
 </script>
