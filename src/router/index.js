@@ -72,7 +72,7 @@ export const asyncRouterMap = [
                 component: _import('Users'),
                 meta: {role: ['admin']}
             },
-            {path: '/table', name: '聊天', icon: 'ios-paper', component: _import('Table'), meta: {role: ['admin']}}
+            {path: '/chat', name: '聊天', icon: 'ios-paper', component: _import('Chat'), meta: {role: ['admin']}}
         ]
     },
 
