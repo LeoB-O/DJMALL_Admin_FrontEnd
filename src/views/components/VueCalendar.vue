@@ -172,14 +172,12 @@ export default {
          this.initData(null);
     },
   data: function () {
-   
     return {
-             currentDay: 1,
+        currentDay: 1,
             currentMonth: 1,
             currentYear: 1970,
             currentWeek: 1,
             days: [],
-
     }
   },
           methods: {
@@ -192,9 +190,10 @@ export default {
                     date = new Date(cur);
                 } else {
                     var now=new Date();
-                    var d = new Date(this.formatDate(now.getFullYear() , now.getMonth() , 1));
-                    d.setDate(35);
+                    var d = new Date(this.formatDate(now.getFullYear(), now.getMonth()+1, 1));
                     date = new Date(this.formatDate(d.getFullYear(),d.getMonth() + 1,1));
+                    console.log(this.formatDate(now.getFullYear(), now.getMonth(), 1));
+                    console.log(date);
                 }
                 this.currentDay = date.getDate();
                 this.currentYear = date.getFullYear();
