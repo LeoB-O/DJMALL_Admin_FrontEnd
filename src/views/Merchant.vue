@@ -120,26 +120,53 @@
             }
         },
         created () {
-            axios.get('/stores').then((response) => {
-                this.data = response.data.stores.map((current) => {
-                    return {
-                        id: current.id,
-                        name: current.name,
-                        category: current.category.map((cate) => {
-                            return {
-                                title: cate.name,
-                                expand: false,
-                                children: cate.subCate.map((sub) => {
-                                    return {
-                                        title: sub.name,
-                                        goodIds: sub.goodIds
-                                    }
-                                })
-                            }
-                        })
-                    }
+            let role = this.$store.getters.roles[0];
+            let id = this.$store.getters.uid;
+            if (rolw == 'admin') {
+                axios.get('/stores').then((response) => {
+                    this.data = response.data.stores.map((current) => {
+                        return {
+                            id: current.id,
+                            name: current.name,
+                            category: current.category.map((cate) => {
+                                return {
+                                    title: cate.name,
+                                    expand: false,
+                                    children: cate.subCate.map((sub) => {
+                                        return {
+                                            title: sub.name,
+                                            goodIds: sub.goodIds
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
                 })
-            })
+            } else {
+                axios.get('user')
+                axios.get('/stores').then((response) => {
+                    this.data = response.data.stores.map((current) => {
+                        return {
+                            id: current.id,
+                            name: current.name,
+                            category: current.category.map((cate) => {
+                                return {
+                                    title: cate.name,
+                                    expand: false,
+                                    children: cate.subCate.map((sub) => {
+                                        return {
+                                            title: sub.name,
+                                            goodIds: sub.goodIds
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                })
+            }
+
         },
         methods: {
             handleEdit(row, index) {
