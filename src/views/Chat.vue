@@ -29,7 +29,7 @@
                         <div>
                             <Button @click="handleChat(row ,index)">聊天</Button>
                         </div>
-                        <ChatRoom @cancel="handleCancel(row)" :modal="row.modal" :Id="row.id"></ChatRoom>
+                        <ChatRoom @cancel="handleCancel(row)" :modal="row.modal" :Id="row.id" v-on:on-modal-change="Change"></ChatRoom>
                     </template>
                 </Table>
             </Col>
@@ -116,6 +116,9 @@
                 })
                 this.data[row._index].modal = true
                 row.modal = true
+            },
+            Change:function(val){
+                this.modal=val
             }
         }
     }
