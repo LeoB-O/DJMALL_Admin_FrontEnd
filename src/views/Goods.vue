@@ -62,13 +62,32 @@
             <Button @click="handleAdd">添加商品</Button>
         </Row>
         <Modal v-model="modal" @on-ok="handleSubmit" @on-cancel="handleCancel">
-            <Input type="text">
-                <div slot="prepend">商品名称</div>
-            </Input>
-            <Input type="text">
-                <div slot="prepend">价格</div>
-            </Input>
-
+            <Form :label-width="80">
+                <FormItem label="商品名称">
+                    <Input type="text" v-model="addGood.name"></Input>
+                </FormItem>
+                <FormItem label="商品价格">
+                    <Input type="text" v-model="addGood.price"></Input>
+                </FormItem>
+                <FormItem label="类别">
+                    <Cascader v-model="addGood.category" :data="categoryOptions"></Cascader>
+                </FormItem>
+                <FormItem label="商品选项">
+                    <div style="display: flex; flex-direction: column; width: 100%;height: auto; border: 1px solid;">
+                        <div style="display: flex; width: 100%; height: auto; border: 1px solid;" v-for="option in addGood.options"
+                             :key="option.name">
+                            <div style="width: 100%;">
+                                <Input v-model="option.name"></Input>
+                            </div>
+                            <div style="display: inline-block; width: 100%;border-left: 1px solid;">
+                                <Input v-model="value.value" :key="value.index" v-for="value in option.values"></Input>
+                                <Button @click="handleAddValue(option)">添加属性值</Button>
+                            </div>
+                        </div>
+                        <Button @click="handleAddAttr">添加属性</Button>
+                    </div>
+                </FormItem>
+            </Form>
         </Modal>
     </div>
 </template>
@@ -127,6 +146,26 @@
                 editOptions: [],
                 category: '',
                 subCategory: '',
+                addGood: {
+                    category: [],
+                    name: '',
+                    price: '',
+                    options: [{
+                        name: 'test',
+                        values: [{index: 1, value:'test-1'}],
+                    },{
+                        name: 'test2',
+                        values: [{index: 1, value:'test-1'}],
+                    }],
+                },
+                categoryOptions: [{
+                    label: 'Shoes',
+                    value: 'shoes',
+                    children: [{
+                        label: 'Men',
+                        value: 'Women'
+                    }]
+                }],
                 modal: false
             }
         },
@@ -138,10 +177,53 @@
 
             },
             handleSubmit() {
-
+                let options = this.addGood.options.map((current) => {
+                    return {
+                        name: current.name,
+                        values: current.values.map((value) => {
+                            return value.value
+                        })
+                    }
+                });
+                let parentCate = this.addGood.category[0];
+                let subCate = this.addGood.category[1];
+                axios.put('/api/good', {
+                    name: this.addGood.name,
+                    price: this.addGood.price,
+                    category: {
+                        parentCate: parentCate,
+                        subCate: subCate
+                    },
+                    options: options,
+                    merchantID: ''  //TODO get merchant id from page
+                })
+                this.addGood={
+                    category: [],
+                        name: '',
+                        price: '',
+                        options: [{
+                        name: '',
+                        values: [{index: 1, value:''}],
+                    }],
+                }
+                this.$router.go(0)
             },
             handleCancel() {
-
+                this.addGood={
+                    category: [],
+                    name: '',
+                    price: '',
+                    options: [{
+                        name: '',
+                        values: [{index: 1, value:''}],
+                    }],
+                }
+            },
+            handleAddAttr() {
+                this.addGood.options.push({name: '', values: [{index: 1, value: ''}]})
+            },
+            handleAddValue(option) {
+                option.values.push({index: option.values[option.values.length-1].index + 1, value: ''})
             },
             handleEdit(row, index) {
                 this.editName = row.name;
