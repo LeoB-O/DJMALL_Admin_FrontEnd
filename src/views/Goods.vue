@@ -174,7 +174,9 @@
                 this.modal = true
             },
             handleDelete(row, index) {
-
+                axios.delete('/api/good?id='+row.id).then((response) => {
+                    this.$router.go(0)
+                })
             },
             handleSubmit() {
                 let options = this.addGood.options.map((current) => {
