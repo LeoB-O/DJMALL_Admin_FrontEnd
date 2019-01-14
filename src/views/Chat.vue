@@ -28,22 +28,17 @@
             <div>
               <Button @click="handleChat(row ,index)">聊天</Button>
             </div>
-            <ChatRoom
-              @cancel="handleCancel(row)"
-              :modal="row.modal"
-              :Id="row.id"
-              v-on:on-modal-change="Change(row)"
-            ></ChatRoom>
           </template>
         </Table>
       </Col>
     </Row>
+    <ChatRoom :modal="modal"  :Id="id" v-on:on-modal-change="Change"></ChatRoom>
   </div>
 </template>
 
 <script>
 import ChatRoom from "@/components/ChatRoom";
-import axios from "@/axios"
+import axios from "@/axios";
 export default {
   name: "Chat",
   components: { ChatRoom },
@@ -72,46 +67,47 @@ export default {
         }
       ],
       data: [],
-      status: 1
+      status: 1,
+      modal:false,
+      id:''
     };
   },
   methods: {
     handleChat: function(row, index) {
-      this.$Notice.open({
-        title: "chating",
-        desc: "Chating"
-      });
-      ChangeUnread(row)
-      row.modal = true;
+      // this.$Notice.open({
+      //   title: "chating",
+      //   desc: "Chating"
+      // });
+      this.ChangeUnread(row);
+      this.id=this.data[index].id
+      this.modal=true;
     },
-    Change: function(row,val) {
-      row.modal = val;
+    Change: function(val) {
+      this.modal=val
     },
-    ChangeUnread:function(row){
-        axios.post('/api/changeunread',{
-            fromid:row.id
-        }).then((response)=>{
-            if(response.success)
-            {
-                console.log('ook')
-            }
-            else
-            {
-                console.log('err')
-            }
+    ChangeUnread: function(row) {
+      axios
+        .post("/api/changeunread", {
+          fromid: row.id
         })
+        .then(response => {
+          if (response.success) {
+            console.log("ook");
+          } else {
+            console.log("err");
+          }
+        });
     }
   },
-  created() {
+  updated() {
     if (this.status === 1) {
       this.status++;
       setInterval(getallchats, 1000);
     }
     let that = this;
     function getallchats() {
-        console.log('hi')
       axios.get("/api/chatbymerchant").then(response => {
-        let allchats = response.body.chats;
+        let allchats = response.data.chats;
         allchats = allchats.map(current => {
           let unread = 0;
           for (let now of current.contents) {
@@ -121,13 +117,13 @@ export default {
           }
           return {
             id: current.from,
-            createdAt: current.createdAt,
-            updatedAt: current.updatedAt,
-            unread:unread,
-            modal:false
+            startTime: current.createdAt,
+            updateTime: current.updatedAt,
+            unread: unread,
+            modal: false
           };
         });
-        that.data=allchats
+        that.data = allchats;
       });
     }
   }
