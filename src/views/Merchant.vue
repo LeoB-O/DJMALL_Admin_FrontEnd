@@ -37,6 +37,7 @@
 <script>
     import IntroChartCount from './charts/IntroChartCount';
     import IntroChartPie from './charts/IntroChartPie';
+    import axios from '@/axios';
 
     export default {
         components: {IntroChartCount, IntroChartPie},
@@ -60,9 +61,6 @@
                 data: [
                     {
                         name: '王小明',
-                        age: 18,
-                        birthday: '919526400000',
-                        address: '北京市朝阳区芍药居',
                         category: [{
                             title: 'Shoes',
                             expand: false,
@@ -75,9 +73,6 @@
                     },
                     {
                         name: '张小刚',
-                        age: 25,
-                        birthday: '696096000000',
-                        address: '北京市海淀区西二旗',
                         category: [{
                             title: 'Shoes',
                             expand: false,
@@ -90,9 +85,6 @@
                     },
                     {
                         name: '李小红',
-                        age: 30,
-                        birthday: '563472000000',
-                        address: '上海市浦东新区世纪大道',
                         category: [{
                             title: 'Shoes',
                             expand: false,
@@ -105,9 +97,6 @@
                     },
                     {
                         name: '周小伟',
-                        age: 26,
-                        birthday: '687024000000',
-                        address: '深圳市南山区深南大道',
                         category: [{
                             title: 'Shoes',
                             expand: false,
@@ -130,12 +119,29 @@
                 subCategory: ''
             }
         },
+        created () {
+            axios.get('/stores').then((response) => {
+                this.data = response.data.stores.map((current) => {
+                    return {
+                        name: current.name,
+                        category: current.category.map((cate) => {
+                            return {
+                                title: cate.name,
+                                expand: false,
+                                children: cate.subCate.map((sub) => {
+                                    return {
+                                        title: sub.name
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            })
+        },
         methods: {
             handleEdit(row, index) {
                 this.editName = row.name;
-                this.editAge = row.age;
-                this.editAddress = row.address;
-                this.editBirthday = row.birthday;
                 this.editIndex = index;
             },
             handleInput(event) {
@@ -198,6 +204,7 @@
                                                     if (i==that.editIndex && event.target._value == that.data[i].category[j].children[k].title) {
                                                         // that.data[i].category[j].children[k].title = event.target.value;
                                                         that.subCategory = event.target.value;
+                                                        that.categoryIndex = j;
                                                         that.subCategoryIndex = k;
                                                     }
                                                 }
