@@ -45,6 +45,14 @@
                 dataModal: this.modal
             };
         },
+        watch:{
+            modal(val){
+                this.dataModal=val
+            },
+            dataModal(val){
+                this.$emit('on-modal-change',val)
+            }
+        },
         methods: {
             sortByTime: function (a, b) {
                 if (a.fmtime < b.fmtime) {
