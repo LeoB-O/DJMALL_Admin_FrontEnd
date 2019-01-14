@@ -257,7 +257,9 @@
                 this.$router.go(0)
             }
         },
-        created() {
+        async created() {
+            let user = await axios.get('/api/user');
+            let merchantId = user.data.merchantId;
             axios.get('/goods').then((response) => {
                 this.data = response.data.goods.map((current) => {
                     return {
@@ -265,6 +267,7 @@
                         name: current.name,
                         price: current.price,
                         category: current.category,
+                        merchantId: current.merchantId,
                         options: current.options.map((option) => {
                             return {
                                 name: option.name,
@@ -278,6 +281,11 @@
                         })
                     }
                 });
+                for (let g in this.data) {
+                    if (this.data[g].merchantId != merchantId) {
+                        this.data.splice(g, 1);
+                    }
+                }
             });
             axios.get('/categories').then((response) => {
                 this.categoryOptions = response.data.menu.map((current) => {
