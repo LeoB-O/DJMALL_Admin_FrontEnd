@@ -72,6 +72,19 @@
                 <FormItem label="类别">
                     <Cascader v-model="addGood.category" :data="categoryOptions"></Cascader>
                 </FormItem>
+                <FormItem label="图片地址">
+                    <Input v-model="addGood.image1"></Input>
+                    <Input v-model="addGood.image2"></Input>
+                    <Input v-model="addGood.image3"></Input>
+                    <Input v-model="addGood.image4"></Input>
+                    <Input v-model="addGood.image5"></Input>
+                </FormItem>
+                <FormItem label="拼音">
+                    <Input v-model="addGood.pinyin"></Input>
+                </FormItem>
+                <FormItem label="英文名">
+                    <Input v-model="addGood.eName"></Input>
+                </FormItem>
                 <FormItem label="商品选项">
                     <div style="display: flex; flex-direction: column; width: 100%;height: auto; border: 1px solid;">
                         <div style="display: flex; width: 100%; height: auto; border: 1px solid;" v-for="option in addGood.options"
@@ -150,6 +163,13 @@
                     category: [],
                     name: '',
                     price: '',
+                    image1: '',
+                    image2: '',
+                    image3: '',
+                    image4: '',
+                    image5: '',
+                    pinyin: '',
+                    eName: '',
                     options: [{
                         name: 'test',
                         values: [{index: 1, value:'test-1'}],
@@ -196,6 +216,15 @@
                         parentCate: parentCate,
                         subCate: subCate
                     },
+                    images: [
+                        this.addGood.image1,
+                        this.addGood.image2,
+                        this.addGood.image3,
+                        this.addGood.image4,
+                        this.addGood.image5,
+                    ],
+                    pinyin: this.addGood.pinyin,
+                    eName: this.addGood.eName,
                     options: options,
                     merchantID: ''  //TODO get merchant id from page
                 })
