@@ -56,14 +56,14 @@ export const asyncRouterMap = [
                 name: '商家管理',
                 icon: 'thumbsup',
                 component: _import('Merchant'),
-                meta: {role: ['admin']}
+                meta: {role: ['admin', 'merchant']}
             },
             {
                 path: '/goods',
                 name: '商品管理',
                 icon: 'thumbsup',
                 component: _import('Goods'),
-                meta: {role: ['admin']}
+                meta: {role: ['admin', 'merchant']}
             },
             {
                 path: '/users',
@@ -72,7 +72,7 @@ export const asyncRouterMap = [
                 component: _import('Users'),
                 meta: {role: ['admin']}
             },
-            {path: '/chat', name: '聊天', icon: 'ios-paper', component: _import('Chat'), meta: {role: ['admin']}}
+            {path: '/chat', name: '聊天', icon: 'ios-paper', component: _import('Chat'), meta: {role: ['merchant']}}
         ]
     },
 
