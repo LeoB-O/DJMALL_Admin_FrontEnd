@@ -123,6 +123,7 @@
             axios.get('/stores').then((response) => {
                 this.data = response.data.stores.map((current) => {
                     return {
+                        id: current.id,
                         name: current.name,
                         category: current.category.map((cate) => {
                             return {
@@ -130,7 +131,8 @@
                                 expand: false,
                                 children: cate.subCate.map((sub) => {
                                     return {
-                                        title: sub.name
+                                        title: sub.name,
+                                        goodIds: sub.goodIds
                                     }
                                 })
                             }
@@ -149,14 +151,31 @@
             },
             handleSave(index) {
                 this.data[index].name = this.editName;
-                this.data[index].age = this.editAge;
-                this.data[index].birthday = this.editBirthday;
-                this.data[index].address = this.editAddress;
-                if (this.categoryIndex!=-1 && this.subCategoryIndex==-1) {
+                if (this.categoryIndex!=-1) {
                     this.data[index].category[this.categoryIndex].title = this.category;
-                } else if(this.categoryIndex!=-1) {
+                }
+                if(this.subCategoryIndex!=-1) {
                     this.data[index].category[this.categoryIndex].children[this.subCategoryIndex].title = this.subCategory;
                 }
+                let store = this.data[index]
+                let payload = {
+                    id: store.id,
+                    name: store.name,
+                    category: store.category.map((current) => {
+                        return {
+                            name: current.title,
+                            subCate: current.children.map((child) => {
+                                return {
+                                    name: child.title,
+                                    goodIds: child.goodIds
+                                }
+                            })
+                        }
+                    })
+                };
+                axios.post('/api/store', payload).then((response) => {
+                    this.$router.go(0);
+                })
                 this.categoryIndex=-1;
                 this.subCategoryIndex=-1;
                 this.editIndex = -1;
