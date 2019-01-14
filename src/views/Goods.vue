@@ -283,6 +283,20 @@
                 });
                 console.log(this.data);
             });
+            axios.get('/categories').then((response) => {
+                this.categoryOptions = response.data.menu.map((current) => {
+                    return {
+                        label: current.name,
+                        value: current.name,
+                        children: current.value.map((sub) => {
+                            return {
+                                label: sub,
+                                value: sub
+                            }
+                        })
+                    }
+                })
+            })
         }
     }
 </script>

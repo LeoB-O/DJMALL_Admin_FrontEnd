@@ -67,6 +67,9 @@ const user = {
       const email = userInfo.email.trim();
       return new Promise((resolve, reject) => {
         loginByEmail(email, userInfo.password).then(response => {
+          if (!response.data.success) {
+            throw new Error('Username or Password Error');
+          }
           const data = response.data.data;
           console.log(data)
           Cookies.set('Admin-Token', response.data.data.token);
@@ -74,6 +77,7 @@ const user = {
           commit('SET_EMAIL', email);
           resolve();
         }).catch(error => {
+          console.log(error);
           reject(error);
         });
       });
