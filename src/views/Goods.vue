@@ -236,7 +236,6 @@
                 this.editIndex = index;
             },
             handleInput(event) {
-                console.log(event);
             },
             handleSave(index) {
                 this.data[index].name = this.editName;
@@ -249,14 +248,12 @@
                         })
                     }
                 });
-                console.log(this.data[index].options)
                 this.data[index].category.parentCate = this.editCategory;
                 this.data[index].category.subCate = this.editSubCategory;
                 this.categoryIndex = -1;
                 this.subCategoryIndex = -1;
                 this.editIndex = -1;
                 axios.post('/api/good', this.data[index]);
-                console.log(this.data[index]);
                 this.$router.go(0)
             }
         },
@@ -281,7 +278,6 @@
                         })
                     }
                 });
-                console.log(this.data);
             });
             axios.get('/categories').then((response) => {
                 this.categoryOptions = response.data.menu.map((current) => {
