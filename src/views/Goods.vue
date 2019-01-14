@@ -31,7 +31,8 @@
                         <div v-if="editIndex === index">
                             <div style="display: flex;" v-for="option in row.options">
                                 <Input v-model="option.name"></Input>
-                                <Input :key="sub.index" v-model="sub.value" v-for="sub in option.values">{{sub}},</Input>
+                                <Input :key="sub.index" v-model="sub.value"
+                                       v-for="sub in option.values">{{sub}},</Input>
                             </div>
                         </div>
 
@@ -50,17 +51,31 @@
                         </div>
                         <div v-else>
                             <Button @click="handleEdit(row, index)">操作</Button>
+                            <Button type="warning" @click="handleDelete(row, index)">删除</Button>
                         </div>
                     </template>
                 </Table>
             </Col>
 
         </Row>
+        <Row>
+            <Button @click="handleAdd">添加商品</Button>
+        </Row>
+        <Modal v-model="modal" @on-ok="handleSubmit" @on-cancel="handleCancel">
+            <Input type="text">
+                <div slot="prepend">商品名称</div>
+            </Input>
+            <Input type="text">
+                <div slot="prepend">价格</div>
+            </Input>
+
+        </Modal>
     </div>
 </template>
 
 <script>
     import axios from '@/axios'
+
     export default {
         name: "Goods",
         data() {
@@ -89,12 +104,6 @@
                 ],
                 data: [
                     {
-                        name: '王小明',
-                        price: 18,
-                        category: {cate: 'Shoes', subCate: 'Men'},
-                        options: [{attrName: 'Size', attrValues: [{index:1, value:'33'}, {index:2, value:'34'}, {index:3, value:'35'}]}]
-                    },
-                    {
                         name: '张小刚',
                         price: 25,
                         category: {cate: 'Shoes', subCate: 'Men'},
@@ -103,20 +112,11 @@
                             attrValues: [{index: 1, value: '33'}, {index: 2, value: '34'}, {index: 3, value: '35'}]
                         }, {
                             attrName: 'Color',
-                            attrValues: [{index: 1, value:'White'}, {index: 2, value: 'Yellow'},{index: 3, value: 'Blue'}]
+                            attrValues: [{index: 1, value: 'White'}, {index: 2, value: 'Yellow'}, {
+                                index: 3,
+                                value: 'Blue'
+                            }]
                         }]
-                    },
-                    {
-                        name: '李小红',
-                        price: 30,
-                        category: {cate: 'Shoes', subCate: 'Men'},
-                        options: [{attrName: 'Size', attrValues: [{index:1, value:'33'}, {index:2, value:'34'}, {index:3, value:'35'}]}]
-                    },
-                    {
-                        name: '周小伟',
-                        price: 26,
-                        category: {cate: 'Shoes', subCate: 'Men'},
-                        options: [{attrName: 'Size', attrValues: [{index:1, value:'33'}, {index:2, value:'34'}, {index:3, value:'35'}]}]
                     }
                 ],
                 editIndex: -1,  // 当前聚焦的输入框的行数
@@ -126,10 +126,23 @@
                 editPrice: '',
                 editOptions: [],
                 category: '',
-                subCategory: ''
+                subCategory: '',
+                modal: false
             }
         },
         methods: {
+            handleAdd() {
+                this.modal = true
+            },
+            handleDelete(row, index) {
+
+            },
+            handleSubmit() {
+
+            },
+            handleCancel() {
+
+            },
             handleEdit(row, index) {
                 this.editName = row.name;
                 this.editPrice = row.price;

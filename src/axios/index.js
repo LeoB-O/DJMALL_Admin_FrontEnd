@@ -15,17 +15,19 @@ axios.interceptors.response.use(
         case 401:
           router.replace({
             path: '/signin',
-            query: {redirect: router.currentRoute.fullPath}
+            query: {
+              redirect: router.currentRoute.fullPath
+            }
           })
       }
     }
-    return Promise.reject(error.response.data)   // 返回接口返回的错误信息
+    return Promise.reject(error.response.data) // 返回接口返回的错误信息
   })
 
 export default {
-  get: function (url,params) {
+  get: function (url, params) {
     return new Promise((resolve, reject) => {
-      axios.get(url,params).then(response => {
+      axios.get(url, params).then(response => {
         resolve(response.data)
       }).catch((error) => reject(error))
     })
@@ -40,6 +42,13 @@ export default {
   put: function (url, data) {
     return new Promise((resolve, reject) => {
       axios.put(url, data).then((response) => resolve(response.data)).catch((error) => reject(error))
+    })
+  },
+  delete: function (url, params) {
+    return new Promise((resolve, reject) => {
+      axios.delete(url, params).then(response => {
+        resolve(response.data)
+      }).catch((error) => reject(error))
     })
   }
 }
