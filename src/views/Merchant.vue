@@ -187,11 +187,13 @@
         },
         methods: {
             handleSubmit() {
+                axios.get('/api/category');
                 axios.put('/api/store', {name: this.addName}).then((response) => {
                     this.$router.go(0);
                 });
             },
             handleDelete(row, index) {
+                axios.get('/api/category');
                 axios.delete('api/store?id=' + row.id).then(() => {
                     this.$router.go(0);
                 })
@@ -233,12 +235,14 @@
                         }
                     })
                 };
-                axios.post('/api/store', payload).then((response) => {
-                    this.$router.go(0);
-                })
+                axios.get('/api/category');
                 this.categoryIndex=-1;
                 this.subCategoryIndex=-1;
                 this.editIndex = -1;
+                axios.post('/api/store', payload).then((response) => {
+                    this.$router.go(0);
+                })
+
             },
             getBirthday(birthday) {
                 const date = new Date(parseInt(birthday));
@@ -272,16 +276,21 @@
                                 on: {
                                     input: function (event) {
                                         that.$emit('input', event.target.value);
+                                        let edited = false;
                                         for (let i in that.data) {
                                             for (let j in that.data[i].category) {
                                                 if (i==that.editIndex && event.target._value == that.data[i].category[j].title) {
                                                     // that.data[i].category[j].title = event.target.value;
                                                     that.category = event.target.value;
                                                     that.categoryIndex = j;
+                                                    edited = true;
                                                 }
                                                 for (let k in that.data[i].category[j].children) {
                                                     if (i==that.editIndex && event.target._value == that.data[i].category[j].children[k].title) {
                                                         // that.data[i].category[j].children[k].title = event.target.value;
+                                                        if (!edited) {
+                                                            that.category = that.data[i].category[j].title
+                                                        }
                                                         that.subCategory = event.target.value;
                                                         that.categoryIndex = j;
                                                         that.subCategoryIndex = k;

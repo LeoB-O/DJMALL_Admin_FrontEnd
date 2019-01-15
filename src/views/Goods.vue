@@ -192,11 +192,13 @@
         methods: {
             handleAdd() {
                 this.modal = true
+                axios.get('/api/category');
             },
             handleDelete(row, index) {
                 axios.delete('/api/good?id='+row.id).then((response) => {
                     this.$router.go(0)
                 })
+                axios.get('/api/category');
             },
             handleSubmit() {
                 let options = this.addGood.options.map((current) => {
@@ -237,6 +239,7 @@
                         values: [{index: 1, value:''}],
                     }],
                 }
+                axios.get('/api/category');
                 this.$router.go(0)
             },
             handleCancel() {
@@ -252,9 +255,11 @@
             },
             handleAddAttr() {
                 this.addGood.options.push({name: '', values: [{index: 1, value: ''}]})
+                axios.get('/api/category');
             },
             handleAddValue(option) {
                 option.values.push({index: option.values[option.values.length-1].index + 1, value: ''})
+                axios.get('/api/category');
             },
             handleEdit(row, index) {
                 this.editName = row.name;
@@ -283,12 +288,14 @@
                 this.subCategoryIndex = -1;
                 this.editIndex = -1;
                 axios.post('/api/good', this.data[index]);
+                axios.get('/api/category');
                 this.$router.go(0)
             }
         },
         async created() {
             let user = await axios.get('/api/user');
             let merchantId = user.data.merchantId;
+            let role = this.$store.getters.roles[0];
             axios.get('/goods').then((response) => {
                 this.data = response.data.goods.map((current) => {
                     return {
@@ -311,7 +318,7 @@
                     }
                 });
                 for (let g in this.data) {
-                    if (this.data[g].merchantId != merchantId) {
+                    if (role == 'merchant' && this.data[g].merchantId != merchantId) {
                         this.data.splice(g, 1);
                     }
                 }
