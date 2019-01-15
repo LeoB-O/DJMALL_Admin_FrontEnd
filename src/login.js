@@ -12,8 +12,11 @@ function hasPermission(roles, permissionRoles) {
 }
 
 // register global progress.
-const whiteList = ['/login', '/authredirect']// 不重定向白名单
+const whiteList = ['/login', '/authredirect', '/signup']// 不重定向白名单
 router.beforeEach((to, from, next) => {
+  if (to.path === '/signup') {
+    return next();
+  }
   NProgress.start() // 开启Progress
   if (store.getters.token) { // 判断是否有token
     if (to.path === '/login') {
@@ -48,6 +51,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
+      console.log('In white list')
       next()
     } else {
       next('/login') // 否则全部重定向到登录页
