@@ -25,12 +25,25 @@
                         </div>
                         <div v-else>
                             <Button @click="handleEdit(row, index)">操作</Button>
+                            <Button type="warning" @click="handleDelete(row, index)">删除</Button>
                         </div>
                     </template>
                 </Table>
             </Col>
 
         </Row>
+        <Row>
+            <Button v-if="this.$store.getters.roles[0]=='admin'" @click="handleAdd">添加商家</Button>
+        </Row>
+
+        <Modal v-model="modal" @on-ok="handleSubmit" @on-cancel="handleCancel">
+            <Form :label-width="80">
+                <FormItem label="商家名称">
+                    <Input v-model="addName"></Input>
+                </FormItem>
+            </Form>
+        </Modal>
+
     </div>
 </template>
 
@@ -44,6 +57,8 @@
         name: 'dashboard',
         data() {
             return {
+                modal: false,
+                addName: '',
                 columns: [
                     {
                         title: 'Merchant Name',
@@ -122,7 +137,8 @@
         created () {
             let role = this.$store.getters.roles[0];
             let id = this.$store.getters.uid;
-            if (rolw == 'admin') {
+            if (role == 'admin') {
+                console.log('admin');
                 axios.get('/stores').then((response) => {
                     this.data = response.data.stores.map((current) => {
                         return {
@@ -144,17 +160,18 @@
                     })
                 })
             } else {
-                axios.get('user')
-                axios.get('/stores').then((response) => {
-                    this.data = response.data.stores.map((current) => {
-                        return {
-                            id: current.id,
-                            name: current.name,
-                            category: current.category.map((cate) => {
+                console.log('else');
+                axios.get('/api/user').then((response) => {
+                    let merchantId = response.data.merchantId;
+                    axios.get('/store?id=' + merchantId).then((response) => {
+                        this.data = [{
+                            id: merchantId,
+                            name: response.data.name,
+                            category: response.data.category.map((current) => {
                                 return {
-                                    title: cate.name,
-                                    expand: false,
-                                    children: cate.subCate.map((sub) => {
+                                    title: current.name,
+                                    expand: true,
+                                    children: current.subCate.map((sub) => {
                                         return {
                                             title: sub.name,
                                             goodIds: sub.goodIds
@@ -162,13 +179,29 @@
                                     })
                                 }
                             })
-                        }
+                        }]
                     })
                 })
             }
 
         },
         methods: {
+            handleSubmit() {
+                axios.put('/api/store', {name: this.addName}).then((response) => {
+                    this.$router.go(0);
+                });
+            },
+            handleDelete(row, index) {
+                axios.delete('api/store?id=' + row.id).then(() => {
+                    this.$router.go(0);
+                })
+            },
+            handleAdd() {
+                this.modal = true;
+            },
+            handleCancel() {
+                this.modal = false;
+            },
             handleEdit(row, index) {
                 this.editName = row.name;
                 this.editIndex = index;
