@@ -1,45 +1,24 @@
 <template>
-  <div class="login-container" style="background-color: #141a48;margin: 0px;overflow: hidden;">
+  <div class="signup-container" style="background-color: #141a48;margin: 0px;overflow: hidden;">
     <div id="canvascontainer" ref="can"></div>
 
-    <Form
-      ref="loginForm"
-      autocomplete="on"
-      :model="loginForm"
-      :rules="loginRules"
-      class="card-box login-form"
-    >
-      <Form-item prop="email">
-        <Input type="text" v-model="loginForm.email" placeholder="Username" autocomplete="on">
-          <Icon type="ios-person-outline" slot="prepend"></Icon>
-        </Input>
-      </Form-item>
-      <Form-item prop="password">
-        <Input
-          type="password"
-          v-model="loginForm.password"
-          placeholder="Password"
-          @keyup.enter.native="handleLogin"
-        >
-          <Icon type="ios-locked-outline" slot="prepend"></Icon>
-        </Input>
-      </Form-item>
-      <Form-item>
-        <Button type="primary" @click="handleLogin('loginForm')" long>登录</Button>
-        <!-- <Button type="primary" @click="SignUp" long>注册</Button> -->
-        <Button type="primary" long>
-          <router-link to="/signup">test</router-link>
-        </Button>
-      </Form-item>
-    </Form>
+    <div class="inputarea">
+      <Input v-model="username" placeholder="Username"></Input>
+      <Input v-model="email" placeholder="Email"></Input>
+      <Input v-model="password" placeholder="Pw" @on-enter="Submit"></Input>
+    </div>
   </div>
 </template>
-
 <script>
 import { isWscnEmail } from "utils/validate";
 
 export default {
   name: "login",
+  computed: {
+    isemailaddress: function() {
+      return /[\w]+(\.[\w]+)*@[\w]+(\.[\w])+/.test(this.email);
+    }
+  },
   data() {
     const validateEmail = (rule, value, callback) => {
       if (false) {
@@ -65,7 +44,10 @@ export default {
         password: [{ required: true, trigger: "blur", validator: validatePass }]
       },
       loading: false,
-      showDialog: false
+      showDialog: false,
+      username: "",
+      password: "",
+      email: ""
     };
   },
   mounted() {
@@ -140,8 +122,32 @@ export default {
         }
       });
     },
-    SignUp: function() {
-      this.$router.push({ path: "/signUp" });
+    handleClick: function() {
+      if (this.isemailaddress) {
+        axios
+          .post("/signup", {
+            username: this.username,
+            password: this.password,
+            email: this.email,
+            permission:1
+          })
+          .then(response => {
+            if (response.data.ok) {
+              this.$Notice.open({
+                title: "Notification",
+                desc: "Signup Success"
+              });
+              this.$router.go("/signin");
+            } else {
+              this.$Notice.open({
+                title: "Notification",
+                desc: "Username or Password has been used"
+              });
+            }
+          });
+      } else {
+        console.log("not email");
+      }
     }
   }
 };
@@ -235,10 +241,29 @@ function render() {
 </script>
 
 
-
 <style>
-.login-container a {
+.signup-container a {
   color: #0078de;
+}
+
+.signup-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  font-size: 0;
+  white-space: nowrap;
+  overflow: auto;
+}
+
+.signup-container:after {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
 }
 #canvascontainer {
   position: absolute;
@@ -250,6 +275,17 @@ function render() {
   border-right: none;
   color: #2d8cf0;
 }
+
+.inputarea {
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+  font-size: 14px;
+  white-space: normal;
+}
+.inputarea a {
+  color: #0078de;
+}
 </style>
 
 <style rel="stylesheet/scss" lang="scss">
@@ -258,7 +294,7 @@ function render() {
   color: #fff;
   margin-bottom: 5px;
 }
-.login-container {
+.signup-container {
   height: 100vh;
   background-color: #2d3a4b;
 
@@ -315,3 +351,5 @@ function render() {
   }
 }
 </style>
+
+

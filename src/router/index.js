@@ -14,10 +14,13 @@ import Page500 from '@/views/errorPages/Page500'
 
 /* login */
 const Login = _import('login/index');
+const Signup = _import('signup/signup');
 Vue.use(Router);
 
 export const constantRouterMap = [
     {path: '/login', component: Login, hidden: true},
+
+    {path:'/signup',component:Signup},
     {
         path: '/pages', redirect: '/pages/p404', name: 'Pages',
         component: {
@@ -90,6 +93,7 @@ export const asyncRouterMap = [
     },
 
 
-    {path: '*', redirect: '/pages/404', hidden: true}
+    {path: '*', redirect: '/pages/404', hidden: true},
+    
 
 ];
