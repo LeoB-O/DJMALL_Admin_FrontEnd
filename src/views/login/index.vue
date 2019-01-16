@@ -28,7 +28,7 @@
         <Button type="primary" @click="handleLogin('loginForm')" long>登录</Button>
         <!-- <Button type="primary" @click="SignUp" long>注册</Button> -->
         <Button type="primary" long>
-          <router-link to="/signup">test</router-link>
+          <router-link to="/signup" style="color: #fff;">注册</router-link>
         </Button>
       </Form-item>
     </Form>
@@ -50,7 +50,7 @@ export default {
     };
     const validatePass = (rule, value, callback) => {
       if (value.length < 5) {
-        callback(new Error("密码不能小于5位"));
+          callback(new Error("密码不能小于5位"));
       } else {
         callback();
       }

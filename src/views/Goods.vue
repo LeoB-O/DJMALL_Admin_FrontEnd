@@ -86,13 +86,13 @@
                     <Input v-model="addGood.eName"></Input>
                 </FormItem>
                 <FormItem label="商品选项">
-                    <div style="display: flex; flex-direction: column; width: 100%;height: auto; border: 1px solid;">
-                        <div style="display: flex; width: 100%; height: auto; border: 1px solid;" v-for="option in addGood.options"
+                    <div style="display: flex; flex-direction: column; width: 100%;height: auto;">
+                        <div style="display: flex; width: 100%; height: auto; margin: 10px 0px;" v-for="option in addGood.options"
                              :key="option.name">
                             <div style="width: 100%;">
                                 <Input v-model="option.name"></Input>
                             </div>
-                            <div style="display: inline-block; width: 100%;border-left: 1px solid;">
+                            <div style="display: inline-block; width: 100%;">
                                 <Input v-model="value.value" :key="value.index" v-for="value in option.values"></Input>
                                 <Button @click="handleAddValue(option)">添加属性值</Button>
                             </div>
@@ -172,9 +172,6 @@
                     eName: '',
                     options: [{
                         name: 'test',
-                        values: [{index: 1, value:'test-1'}],
-                    },{
-                        name: 'test2',
                         values: [{index: 1, value:'test-1'}],
                     }],
                 },
@@ -303,7 +300,7 @@
                         name: current.name,
                         price: current.price,
                         category: current.category,
-                        merchantId: current.merchantId,
+                        merchantId: current.merchantID,
                         options: current.options.map((option) => {
                             return {
                                 name: option.name,
@@ -317,11 +314,19 @@
                         })
                     }
                 });
-                for (let g in this.data) {
-                    if (role == 'merchant' && this.data[g].merchantId != merchantId) {
-                        this.data.splice(g, 1);
+                let count = 0
+                let l = this.data.length;
+                for (let g = 0; g < l; g++) {
+                    if (role == 'merchant' && this.data[count].merchantId != merchantId) {
+                        this.data.splice(count, 1);
+                        console.log(this.data[count].merchantId)
+                        console.log(merchantId)
+                        console.log(this.data[count].merchantId != merchantId)
+                    } else {
+                        count++;
                     }
                 }
+                console.log(this.data)
             });
             axios.get('/categories').then((response) => {
                 this.categoryOptions = response.data.menu.map((current) => {

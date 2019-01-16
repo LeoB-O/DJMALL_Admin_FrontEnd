@@ -73,56 +73,7 @@
                         slot: 'action'
                     }
                 ],
-                data: [
-                    {
-                        name: '王小明',
-                        category: [{
-                            title: 'Shoes',
-                            expand: false,
-                            children: [{title: 'Men'}, {title: 'Women'}]
-                        }, {
-                            title: 'Cloths',
-                            expand: false,
-                            children: [{title: 'Men'}, {title: 'Women'}]
-                        }]
-                    },
-                    {
-                        name: '张小刚',
-                        category: [{
-                            title: 'Shoes',
-                            expand: false,
-                            children: [{title: 'Men'}, {title: 'Women'}]
-                        }, {
-                            title: 'Cloths',
-                            expand: false,
-                            children: [{title: 'Men'}, {title: 'Women'}]
-                        }]
-                    },
-                    {
-                        name: '李小红',
-                        category: [{
-                            title: 'Shoes',
-                            expand: false,
-                            children: [{title: 'Men'}, {title: 'Women'}]
-                        }, {
-                            title: 'Cloths',
-                            expand: false,
-                            children: [{title: 'Men'}, {title: 'Women'}]
-                        }]
-                    },
-                    {
-                        name: '周小伟',
-                        category: [{
-                            title: 'Shoes',
-                            expand: false,
-                            children: [{title: 'Men'}, {title: 'Women'}]
-                        }, {
-                            title: 'Cloths',
-                            expand: false,
-                            children: [{title: 'Men'}, {title: 'Women'}]
-                        }]
-                    }
-                ],
+                data: [],
                 editIndex: -1,  // 当前聚焦的输入框的行数
                 editName: '',  // 第一列输入框，当然聚焦的输入框的输入内容，与 data 分离避免重构的闪烁
                 editAge: '',  // 第二列输入框
@@ -323,6 +274,7 @@
                                     click: () => {
                                         // data.children.push({title: 'Men'});
                                         console.log(root);
+                                        axios.get('/api/category').then(()=>{});
                                         for (let i in this.data) {
                                             for (let j in this.data[i].category) {
                                                 if (i==that.editIndex && data.title == this.data[i].category[j].title) {
@@ -345,6 +297,7 @@
                                 on: {
                                     click: () => {
                                         console.log(data);
+                                        axios.get('/api/category').then(()=>{});
                                         for (let i in this.data) {
                                             for (let j in this.data[i].category) {
                                                 if (data.title == this.data[i].category[j].title) {

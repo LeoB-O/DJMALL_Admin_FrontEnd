@@ -5,12 +5,13 @@
     <div class="inputarea">
       <Input v-model="username" placeholder="Username"></Input>
       <Input v-model="email" placeholder="Email"></Input>
-      <Input v-model="password" placeholder="Pw" @on-enter="Submit"></Input>
+      <Input type="password" v-model="password" placeholder="Pw" @on-enter="Submit"></Input>
     </div>
   </div>
 </template>
 <script>
 import { isWscnEmail } from "utils/validate";
+import axios from '@/axios'
 
 export default {
   name: "login",
@@ -22,7 +23,8 @@ export default {
   data() {
     const validateEmail = (rule, value, callback) => {
       if (false) {
-        callback(new Error("请输入正确的合法邮箱"));
+          callback(new Error("请输入正确的合法邮箱"));
+          this.$Message.error("请输入正确的合法邮箱");
       } else {
         callback();
       }
@@ -30,6 +32,8 @@ export default {
     const validatePass = (rule, value, callback) => {
       if (value.length < 5) {
         callback(new Error("密码不能小于5位"));
+          this.$Message.error("密码不能小于5位");
+
       } else {
         callback();
       }
@@ -122,7 +126,7 @@ export default {
         }
       });
     },
-    handleClick: function() {
+    Submit: function() {
       if (this.isemailaddress) {
         axios
           .post("/signup", {
@@ -137,7 +141,7 @@ export default {
                 title: "Notification",
                 desc: "Signup Success"
               });
-              this.$router.go("/signin");
+              this.$router.push('/login');
             } else {
               this.$Notice.open({
                 title: "Notification",
@@ -147,6 +151,8 @@ export default {
           });
       } else {
         console.log("not email");
+          this.$Message.error("请输入正确的合法邮箱");
+
       }
     }
   }

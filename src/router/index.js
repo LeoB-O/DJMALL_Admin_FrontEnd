@@ -53,18 +53,18 @@ export const asyncRouterMap = [
         component: Full,
         hidden: false,
         children: [
-            {path: '/dashboard', name: 'Dashboard', icon: 'speedometer', component: _import('Dashboard')},
+            {path: '/dashboard', name: 'Dashboard', icon: 'md-code', component: _import('Dashboard')},
             {
                 path: '/merchant',
                 name: '商家管理',
-                icon: 'thumbsup',
+                icon: 'md-basket',
                 component: _import('Merchant'),
                 meta: {role: ['admin', 'merchant']}
             },
             {
                 path: '/goods',
                 name: '商品管理',
-                icon: 'thumbsup',
+                icon: 'md-cart',
                 component: _import('Goods'),
                 meta: {role: ['admin', 'merchant']}
             },
@@ -75,7 +75,7 @@ export const asyncRouterMap = [
                 component: _import('Users'),
                 meta: {role: ['admin',]}
             },
-            {path: '/chat', name: '聊天', icon: 'ios-paper', component: _import('Chat'), meta: {role: ['merchant']}}
+            {path: '/chat', name: '聊天', icon: 'ios-chatboxes', component: _import('Chat'), meta: {role: ['merchant',]}}
         ]
     },
 
@@ -94,6 +94,6 @@ export const asyncRouterMap = [
 
 
     {path: '*', redirect: '/pages/404', hidden: true},
-    
+
 
 ];

@@ -22,7 +22,7 @@
       ></Chatbox>
 
       <div slot="footer">
-        <Input v-model="content" placeholder="Please Input">
+        <Input v-model="content" placeholder="Please Input" @on-enter="handleClick">
           <Button type="primary" slot="append" @click="handleClick">Send</Button>
         </Input>
       </div>
@@ -96,18 +96,19 @@ export default {
         })
         .then(resposne => {
           console.log(resposne.body.success);
-          // if (resposne.body.success) {
-          //   this.$Notice.open({
-          //     title: "Notification",
-          //     desc: "Send Success"
-          //   });
-          // } else {
-          //   this.$Notice.open({
-          //     title: "Notification",
-          //     desc: "Send Faild"
-          //   });
-          // }
+          if (resposne.data.ok) {
+            this.$Notice.open({
+              title: "Notification",
+              desc: "Send Success"
+            });
+          } else {
+            this.$Notice.open({
+              title: "Notification",
+              desc: "Send Faild"
+            });
+          }
         });
+        this.content = ''
     },
     getchat: function getChats() {
       axios
@@ -122,12 +123,12 @@ export default {
           for (let f in fromuser) {
             fromuser[f].type = 0;
             fromuser[f].name = "我";
-            fromuser[f].fmtime = new Date(fromuser[f].time);
+            fromuser[f].fmtime = fromuser[f].time;
           }
           for (let t in touser) {
             touser[t].type = 1;
             touser[t].name = this.sshopname;
-            touser[t].fmtime = new Date(touser[t].time);
+            touser[t].fmtime = touser[t].time;
           }
           let content = fromuser.concat(touser);
           content.sort(this.sortByTime);
